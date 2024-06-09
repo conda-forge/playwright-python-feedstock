@@ -44,7 +44,7 @@ test:
 
 about:
   home: https://github.com/Microsoft/playwright-python
-  summary: the blessed package to manage your versions by scm tags
+  summary: Python version of the Playwright testing and automation library.
   license: Apache-2.0
   license_file: LICENSE
 
