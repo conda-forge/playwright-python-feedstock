@@ -1,5 +1,5 @@
 {% set name = "playwright-python" %}
-{% set version = "1.44.0" %}
+{% set version = "1.45.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/Microsoft/playwright-python/archive/v{{ version }}.tar.gz
-  sha256: 5095b6ecb73234e66da3de7e66d0358d5564e571c67961d7ed3ffd89ca7c761f
+  sha256: 61b3991212e4bbef8db850a9c94547398428482cd4c5d476020ccd65229bd471
   patches:
     - auditwheel.patch  # auditwheel is only available for linux, so we remove it from the build requirements
     - setup.patch       # Disable download of binaries 
