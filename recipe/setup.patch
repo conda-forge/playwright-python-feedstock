@@ -1,31 +1,31 @@
-From e467402f29862e24e870bea347164da4c4b1ce1f Mon Sep 17 00:00:00 2001
+From 8131394255b5459be980ba677c295c54c9f24467 Mon Sep 17 00:00:00 2001
 From: Jan Janssen <jan-janssen@users.noreply.github.com>
-Date: Fri, 7 Jun 2024 16:07:55 +0200
-Subject: [PATCH] Disable downloads
+Date: Fri, 22 Nov 2024 18:18:05 +0100
+Subject: [PATCH] Update setup.py
 
 ---
  setup.py | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index 8709e52a2..c09304d74 100644
+index b4212cb9d..21fe0cc0a 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -120,7 +120,7 @@ def run(self) -> None:
-                 "zip_name": "win32_x64",
-             },
-         ]
--        self._download_and_extract_local_driver(base_wheel_bundles)
-+        # self._download_and_extract_local_driver(base_wheel_bundles)
+@@ -113,7 +113,7 @@ def run(self) -> None:
+         super().run()
+         os.makedirs("driver", exist_ok=True)
+         os.makedirs("playwright/driver", exist_ok=True)
+-        self._download_and_extract_local_driver()
++        # self._download_and_extract_local_driver()
  
-         wheels = base_wheel_bundles
-         if not self.all:
-@@ -132,7 +132,7 @@ def run(self) -> None:
-                     base_wheel_bundles,
+         wheel = None
+         if os.getenv("PLAYWRIGHT_TARGET_WHEEL", None):
+@@ -133,7 +133,7 @@ def run(self) -> None:
                  )
-             )[:1]
--        self._build_wheels(wheels)
-+        # self._build_wheels(wheels)
+             )[0]
+         assert wheel
+-        self._build_wheel(wheel)
++        # self._build_wheel(wheel)
  
-     def _build_wheels(
+     def _build_wheel(
          self,
