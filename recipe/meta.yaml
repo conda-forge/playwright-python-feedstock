@@ -18,17 +18,17 @@ build:
     - playwright=playwright.__main__:main
   noarch: python
   script: SETUPTOOLS_SCM_PRETEND_VERSION={{ version }} {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 0
+  number: 1
 
 requirements:
   host:
-    - python >=3.8
+    - python {{ python_min }}
     - setuptools =68.2.2
     - setuptools-scm =8.0.4
     - wheel =0.42.0
     - pip
   run:
-    - python >=3.8
+    - python >={{ python_min }}
     - greenlet =3.1.1
     - pyee =12.0.0
     - playwright
@@ -41,6 +41,7 @@ test:
     - playwright install --help
   requires:
     - pip
+    - python {{ python_min }}
 
 about:
   home: https://github.com/Microsoft/playwright-python
