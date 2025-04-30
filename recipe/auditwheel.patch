@@ -4,8 +4,8 @@ Date: Sat, 8 Jun 2024 06:26:27 +0200
 Subject: [PATCH] Remove auditwheel
 
 ---
- pyproject.toml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ pyproject.toml | 4 ++--
+ 1 file changed, 2 insertion(+), 2 deletion(-)
 
 diff --git a/pyproject.toml b/pyproject.toml
 index 2f6801904..5f78797c6 100644
@@ -18,3 +18,12 @@ index 2f6801904..5f78797c6 100644
  build-backend = "setuptools.build_meta"
  
  [project]
+@@ -9,7 +9,7 @@ authors = [
+     {name = "Microsoft Corporation"}
+ ]
+ readme = "README.md"
+-license = "Apache-2.0"
++license = { text = "Apache-2.0" }
+ dynamic = ["version"]
+ requires-python = ">=3.9"
+ # Please when changing dependencies run the following commands to update requirements.txt:
