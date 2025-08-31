@@ -19,21 +19,18 @@ build:
     entry_points:
       - playwright = playwright.__main__:main
   noarch: python
-  # script: SETUPTOOLS_SCM_PRETEND_VERSION=${{ version }} {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  script: cmd /C "set SETUPTOOLS_SCM_PRETEND_VERSION=1.54.0 &&  %PYTHON% -m pip install . -vv --no-deps --no-build-isolation"
+  script: SETUPTOOLS_SCM_PRETEND_VERSION=${{ version }} {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
 
 requirements:
   host:
-    # - python {{ python_min }}
-    - python
+    - python {{ python_min }}
     - setuptools =68.2.2
     - setuptools-scm =8.0.4
     - wheel =0.42.0
     - pip
   run:
-    # - python >={{ python_min }}
-    - python
+    - python >={{ python_min }}
     - greenlet =3.1.1
     - pyee <14,>=13
     - playwright
@@ -42,7 +39,7 @@ tests:
   - python:
       imports:
         - playwright
-    # python_version: {{ python_min }}
+      python_version: {{ python_min }}
   - script:
       - playwright install --help
   - script:
