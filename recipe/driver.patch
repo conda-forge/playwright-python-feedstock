@@ -1,8 +1,8 @@
 diff --git a/playwright/_impl/_driver.py b/playwright/_impl/_driver.py
-index 22b53b8..f93ebdc 100644
+index 22b53b8..be5e3d7 100644
 --- a/playwright/_impl/_driver.py
 +++ b/playwright/_impl/_driver.py
-@@ -23,14 +23,31 @@ from playwright._repo_version import version
+@@ -23,15 +23,32 @@ from playwright._repo_version import version
 
 
  def compute_driver_executable() -> Tuple[str, str]:
@@ -16,9 +16,10 @@ index 22b53b8..f93ebdc 100644
 -    return (os.getenv("PLAYWRIGHT_NODEJS_PATH", str(driver_path / "node")), cli_path)
 +    # NOTE: This code has been modified for the distribution of the conda-forge package.
 +    # The conda-forge build places the Playwright driver differently than the PyPI package.
++    # Check the conda-force feedstock: https://github.com/conda-forge/playwright-python-feedstock
 +    # First, try the patched conda-forge relative layout. If that fails, fall back to
 +    # CONDA_PREFIX-based layout. If neither works, raise a clear error.
-+
+
 +    cli_path = Path(inspect.getfile(playwright)).parent / ".." / ".." / ".." / "node_modules" / "playwright" / "node_modules" / "playwright-core" / "cli.js"
 +    node_path = Path(inspect.getfile(playwright)).parent / ".." / ".." / ".." / ".." / "bin" / "node"
 +
@@ -40,5 +41,5 @@ index 22b53b8..f93ebdc 100644
 +        f"Ensure playwright is correctly installed via conda-forge."
 +    )
 
-
  def get_driver_env() -> dict:
+     env = os.environ.copy()
