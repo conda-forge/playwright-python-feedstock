@@ -24,7 +24,7 @@ build:
 
 requirements:
   host:
-    - python ${{ python_min }}
+    - python ${{ python_min }}.*
     - setuptools =68.2.2
     - setuptools-scm =8.0.4
     - wheel =0.42.0
@@ -39,7 +39,7 @@ tests:
   - python:
       imports:
         - playwright
-      python_version: ${{ python_min }}
+      python_version: ${{ python_min }}.*
   - script:
       - playwright install --help
   - script:
