@@ -1,0 +1,65 @@
+context:
+  name: "playwright-python"
+  version: "1.54.0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/Microsoft/playwright-python/archive/v${{ version }}.tar.gz
+  sha256: c8de3e41d1bdae13123f9b13b1acb8d3fd88072318a468b485e5d2dde63bce95
+  patches:
+    - auditwheel.patch  # auditwheel is only available for linux, so we remove it from the build requirements
+    - setup.patch       # Disable download of binaries
+    - driver.patch      # Fix playwright nodejs location
+
+build:
+  python:
+    entry_points:
+      - playwright = playwright.__main__:main
+  noarch: python
+  # script: SETUPTOOLS_SCM_PRETEND_VERSION=${{ version }} {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script: cmd /C "set SETUPTOOLS_SCM_PRETEND_VERSION=1.54.0 &&  %PYTHON% -m pip install . -vv --no-deps --no-build-isolation"
+  number: 0
+
+requirements:
+  host:
+    # - python {{ python_min }}
+    - python
+    - setuptools =68.2.2
+    - setuptools-scm =8.0.4
+    - wheel =0.42.0
+    - pip
+  run:
+    # - python >={{ python_min }}
+    - python
+    - greenlet =3.1.1
+    - pyee <14,>=13
+    - playwright
+
+tests:
+  - python:
+      imports:
+        - playwright
+    # python_version: {{ python_min }}
+  - script:
+      - playwright install --help
+  - script:
+      - >
+        python -c "import subprocess,sys;
+        from playwright._impl._driver import compute_driver_executable,get_driver_env;
+        n,c=compute_driver_executable();
+        r=subprocess.run([n,c,'--version'],env=get_driver_env(),capture_output=True,text=True);
+        print(r.stdout or r.stderr);
+        sys.exit(0 if r.returncode==0 else 1)"
+
+about:
+  homepage: https://github.com/Microsoft/playwright-python
+  summary: Python version of the Playwright testing and automation library.
+  license: Apache-2.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
