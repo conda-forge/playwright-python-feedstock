@@ -1,19 +1,10 @@
-From 039bfedccde8e7bd66f580139a6c8b69a877c5d3 Mon Sep 17 00:00:00 2001
-From: Jan Janssen <jan-janssen@users.noreply.github.com>
-Date: Fri, 7 Jun 2024 21:56:37 +0200
-Subject: [PATCH] relative driver path
-
----
- playwright/_impl/_driver.py | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
 diff --git a/playwright/_impl/_driver.py b/playwright/_impl/_driver.py
-index 9e8cdc1e7..9dc41548c 100644
+index 22b53b8..be5e3d7 100644
 --- a/playwright/_impl/_driver.py
 +++ b/playwright/_impl/_driver.py
-@@ -23,14 +23,9 @@
- 
- 
+@@ -23,15 +23,32 @@ from playwright._repo_version import version
+
+
  def compute_driver_executable() -> Tuple[str, str]:
 -    driver_path = Path(inspect.getfile(playwright)).parent / "driver"
 -    cli_path = str(driver_path / "package" / "cli.js")
@@ -23,9 +14,32 @@ index 9e8cdc1e7..9dc41548c 100644
 -            cli_path,
 -        )
 -    return (os.getenv("PLAYWRIGHT_NODEJS_PATH", str(driver_path / "node")), cli_path)
++    # NOTE: This code has been modified for the distribution of the conda-forge package.
++    # The conda-forge build places the Playwright driver differently than the PyPI package.
++    # Check the conda-force feedstock: https://github.com/conda-forge/playwright-python-feedstock
++    # First, try the patched conda-forge relative layout. If that fails, fall back to
++    # CONDA_PREFIX-based layout. If neither works, raise a clear error.
+
 +    cli_path = Path(inspect.getfile(playwright)).parent / ".." / ".." / ".." / "node_modules" / "playwright" / "node_modules" / "playwright-core" / "cli.js"
 +    node_path = Path(inspect.getfile(playwright)).parent / ".." / ".." / ".." / ".." / "bin" / "node"
-+    return (str(node_path), str(cli_path))
- 
- 
++
++    if cli_path.exists() and node_path.exists():
++        return (str(node_path), str(cli_path))
++
++    conda_prefix = os.getenv("CONDA_PREFIX")
++    if conda_prefix:
++        alt_cli_path = Path(conda_prefix) / "Library" / "share" / "playwright" / "node_modules" / "playwright-core" / "cli.js"
++        alt_node_path = Path(conda_prefix) / "node.exe" if sys.platform == "win32" else Path(conda_prefix) / "bin" / "node"
++
++        if alt_cli_path.exists() and alt_node_path.exists():
++            return (str(alt_node_path), str(alt_cli_path))
++
++    raise RuntimeError(
++        f"Playwright driver executable not found.\n"
++        f"Tried: {node_path} + {cli_path}\n"
++        f"and CONDA_PREFIX-based path.\n"
++        f"Ensure playwright is correctly installed via conda-forge."
++    )
+
  def get_driver_env() -> dict:
+     env = os.environ.copy()
