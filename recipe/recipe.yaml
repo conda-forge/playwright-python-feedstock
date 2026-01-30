@@ -2,7 +2,7 @@
 schema_version: 1
 
 context:
-  version: "1.57.0"
+  version: "1.58.0"
   python_check_max: "3.14"
 
 package:
@@ -11,7 +11,7 @@ package:
 
 source:
   url: https://github.com/Microsoft/playwright-python/archive/v${{ version }}.tar.gz
-  sha256: a040082a24efc6d2a9416daacb4cc173b9750291262b8b8cca154a23b437f029
+  sha256: 27ce34440c0a73d8123f721f8288689db57a40358e40f1ab234c936f4a2c08eb
   patches:
     - auditwheel.patch  # auditwheel is only available for linux, so we remove it from the build requirements
     - setup.patch       # Disable download of binaries
