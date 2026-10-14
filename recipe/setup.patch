@@ -8,10 +8,9 @@ Subject: [PATCH] Update setup.py
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index b4212cb9d..21fe0cc0a 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -113,7 +113,7 @@ def run(self) -> None:
+@@ -124,7 +124,7 @@
          super().run()
          os.makedirs("driver", exist_ok=True)
          os.makedirs("playwright/driver", exist_ok=True)
@@ -20,7 +19,7 @@ index b4212cb9d..21fe0cc0a 100644
  
          wheel = None
          if os.getenv("PLAYWRIGHT_TARGET_WHEEL", None):
-@@ -133,7 +133,7 @@ def run(self) -> None:
+@@ -144,7 +144,7 @@
                  )
              )[0]
          assert wheel
