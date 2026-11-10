@@ -1,27 +1,30 @@
 diff --git a/playwright/_impl/_driver.py b/playwright/_impl/_driver.py
 --- a/playwright/_impl/_driver.py
 +++ b/playwright/_impl/_driver.py
-@@ -23,16 +23,33 @@
+@@ -24,19 +24,30 @@
  
  
  def compute_driver_executable() -> Tuple[str, str]:
 -    driver_path = Path(inspect.getfile(playwright)).parent / "driver"
 -    cli_path = str(driver_path / "package" / "cli.js")
--    if sys.platform == "win32":
--        return (
--            os.getenv("PLAYWRIGHT_NODEJS_PATH", str(driver_path / "node.exe")),
--            cli_path,
+-    node_path = os.getenv("PLAYWRIGHT_NODEJS_PATH")
+-    if node_path:
+-        return (node_path, cli_path)
+-    bundled_node = driver_path / ("node.exe" if sys.platform == "win32" else "node")
+-    if not bundled_node.is_file():
+-        # The source distribution ships the driver without Node.js.
+-        raise Error(
+-            "This installation of Playwright does not include Node.js. "
+-            "Set PLAYWRIGHT_NODEJS_PATH pointing to Node.js executable."
 -        )
--    return (os.getenv("PLAYWRIGHT_NODEJS_PATH", str(driver_path / "node")), cli_path)
+-    return (str(bundled_node), cli_path)
 +    # NOTE: This code has been modified for the distribution of the conda-forge package.
 +    # The conda-forge build places the Playwright driver differently than the PyPI package.
-+    # Check the conda-force feedstock: https://github.com/conda-forge/playwright-python-feedstock
++    # Check the conda-forge feedstock: https://github.com/conda-forge/playwright-python-feedstock
 +    # First, try the patched conda-forge relative layout. If that fails, fall back to
 +    # CONDA_PREFIX-based layout. If neither works, raise a clear error.
- 
 +    cli_path = Path(inspect.getfile(playwright)).parent / ".." / ".." / ".." / "node_modules" / "playwright" / "node_modules" / "playwright-core" / "cli.js"
 +    node_path = Path(inspect.getfile(playwright)).parent / ".." / ".." / ".." / ".." / "bin" / "node"
- 
 +    if cli_path.exists() and node_path.exists():
 +        return (str(node_path), str(cli_path))
 +
@@ -34,6 +37,14 @@ diff --git a/playwright/_impl/_driver.py b/playwright/_impl/_driver.py
 +            return (str(alt_node_path), str(alt_cli_path))
 +
 +    raise RuntimeError(
++        f"Playwright driver executable not found.\n"
++        f"Tried: {node_path} + {cli_path}\n"
++        f"and CONDA_PREFIX-based path.\n"
++        f"Ensure playwright is correctly installed via conda-forge."
++    )
+ 
+ 
+ def node_launch_error(executable: str, error: OSError) -> Error:
 +        f"Playwright driver executable not found.\n"
 +        f"Tried: {node_path} + {cli_path}\n"
 +        f"and CONDA_PREFIX-based path.\n"
